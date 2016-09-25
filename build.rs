@@ -14,39 +14,39 @@ macro_rules! generate_getters {
 
 fn generate_getter(fd: &mut File, typ: &str, method: &str) {
     // Normal getter
-    fd.write_fmt(format_args!("\n($var:tt.$($x:tt).* as {}) => {{
-        wat!($var.$($x).*).as_{}().unwrap()
+    fd.write_fmt(format_args!("\n($var:expr, .$($x:tt).* as {}) => {{
+        wat!($var, $($x).*).as_{}().unwrap()
     }};\n", typ, method)).unwrap();
 
     // Normal safe getter
-    fd.write_fmt(format_args!("\n($var:tt.$($x:tt).* as {}?) => {{
-        wat!($var.$($x).*?).and_then(|x| x.as_{}())
+    fd.write_fmt(format_args!("\n($var:expr, .$($x:tt).* as {}?) => {{
+        wat!($var, $($x).*?).and_then(|x| x.as_{}())
     }};\n", typ, method)).unwrap();
 
     // Top level getter
-    fd.write_fmt(format_args!("\n($var:tt as {}) => {{
+    fd.write_fmt(format_args!("\n($var:expr, as {}) => {{
         $var.as_{}().unwrap()
     }};\n", typ, method)).unwrap();
 
     // Top level safe getter
-    fd.write_fmt(format_args!("\n($var:tt as {}?) => {{
+    fd.write_fmt(format_args!("\n($var:expr, as {}?) => {{
         $var.as_{}()
     }};\n", typ, method)).unwrap();
 }
 
 fn generate_checker(fd: &mut File, typ: &str, method: &str) {
     // Normal check
-    fd.write_fmt(format_args!("\n($var:tt.$($x:tt).* is {}) => {{
-        wat!($var.$($x).*).is_{}()
+    fd.write_fmt(format_args!("\n($var:expr,.$($x:tt).* is {}) => {{
+        wat!($var, $($x).*).is_{}()
     }};\n", typ, method)).unwrap();
 
     // Safe check
-    fd.write_fmt(format_args!("\n($var:tt.$($x:tt).* is {}?) => {{
-        wat!($var.$($x).*?).map_or(false, |x| x.is_{}())
+    fd.write_fmt(format_args!("\n($var:expr,.$($x:tt).* is {}?) => {{
+        wat!($var, $($x).*?).map_or(false, |x| x.is_{}())
     }};\n", typ, method)).unwrap();
 
     // Top level check
-    fd.write_fmt(format_args!("\n($var:tt is {}) => {{
+    fd.write_fmt(format_args!("\n($var:expr, is {}) => {{
         $var.is_{}()
     }};\n", typ, method)).unwrap();
     // Top level safe check would be silly.. there are no keys to lookup

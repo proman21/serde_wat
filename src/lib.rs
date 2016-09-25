@@ -15,11 +15,11 @@
 //! # fn main() {
 //! let a: Value = from_str(r#"{"b": {"c": 42}}"#).unwrap();
 //! // Access unwrapping
-//! assert_eq!(wat!(a.b.c as i64), 42);
+//! assert_eq!(wat!(a, .b.c as i64), 42);
 //! // Safe access
-//! assert_eq!(wat!(a.b as &str?), None);
+//! assert_eq!(wat!(a, .b as &str?), None);
 //! // Testing
-//! assert_eq!(wat!(a is bool), false);
+//! assert_eq!(wat!(a, is bool), false);
 //! # }
 //! ```
 //!
